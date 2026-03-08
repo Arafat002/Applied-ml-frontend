@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeExplainer AI - Python Code Explanation Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- CodeMirror for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1> PyExplainer.AI </h1>
+            </div>
+            <div class="header-info">
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+                    <span class="theme-icon" id="themeIcon">🌙</span>
+                </button>
+                <span class="badge">Python Programs</span>
+                <span class="model-info">CodeT5-Base Model</span>
+            </div>
+        </header>
+        <main class="main-content">
+            <div class="editor-panel">
+                <div class="panel-header">
+                    <h2>Code Editor</h2>
+                    <div class="editor-actions">
+                        <button class="btn-secondary" id="clearBtn">Clear</button>
+                        <button class="btn-secondary" id="exampleBtn">Load Example</button>
+                    </div>
+                </div>
+                <div class="editor-container">
+                    <textarea id="codeEditor" placeholder="# Paste your Python code here..."></textarea>
+                </div>
+                <button class="btn-primary" id="explainBtn">
+                    Explain Code
+                </button>
+            </div>
+
+            <div class="explanation-panel">
+                <div class="panel-header">
+                    <h2>Explanation</h2>
+                    <button class="btn-icon-only" id="copyBtn" title="Copy explanation">
+                        📋
+                    </button>
+                </div>
+                <div class="explanation-container" id="explanationContainer">
+                    <div class="empty-state">
+                        <div class="empty-icon">📄</div>
+                        <h3>No explanation yet</h3>
+                        <p>Paste your code in the editor and click "Explain Code" to get a detailed explanation.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Applied ML Project • Fine-tuned CodeT5-Base for beginner-friendly Python explanations</p>
+        </footer>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p>Generating explanation...</p>
+    </div>
+    <div class="toast" id="toast"></div>
+
+    <script src="main.js"></script>
+</body>
+</html>
