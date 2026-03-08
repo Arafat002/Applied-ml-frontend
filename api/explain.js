@@ -2,7 +2,7 @@ export default async function handler(req, res) {
     const code = req.body.code;
 
     const response = await fetch(
-        "https://api-inference.huggingface.co/models/Arafat002/codet5-python-explainer",
+        "https://router.huggingface.co/hf-inference/models/Arafat002/codet5-python-explainer",
         {
             method: "POST",
             headers: {
