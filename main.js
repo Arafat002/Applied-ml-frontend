@@ -111,21 +111,17 @@ async function callModelAPI(code) {
 
     const result = await response.json();
 
-    console.log(result); // DEBUG (check browser console)
+    console.log("API Response:", result);
 
-    if (result.error) {
-        throw new Error(result.error);
-    }
-
-    if (Array.isArray(result)) {
-        return result[0].generated_text;
+    if (!response.ok) {
+        throw new Error(result.error || "Server error");
     }
 
     if (result.generated_text) {
         return result.generated_text;
     }
 
-    throw new Error("Unexpected API response");
+    throw new Error("Unexpected API response format");
 }
 
 
