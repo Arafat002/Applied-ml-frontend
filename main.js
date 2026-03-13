@@ -98,18 +98,38 @@ async function handleExplainCode() {
 // API Call to the Fine-Tuned Model
 
 async function callModelAPI(code) {
+    const SPACE_URL = 'https://arafat002-codet5-python-explainer.hf.space/api/predict';
+
     try {
-        // Use Gradio's official client
-        const { client } = window.gradio;
+        const response = await fetch(SPACE_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                data: [code]
+            })
+        });
 
-        const app = await client("https://arafat002-codet5-python-explainer.hf.space");
-        const result = await app.predict("/predict", [code]);
+        if (response.status === 404 || response.status === 503) {
+            throw new Error('Model is sleeping. Please visit https://arafat002-codet5-python-explainer.hf.space first!');
+        }
 
-        return result.data[0];
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.data && result.data.length > 0) {
+            return result.data[0];
+        } else {
+            throw new Error('No explanation received');
+        }
 
     } catch (error) {
-        console.error('Gradio Client Error:', error);
-        throw new Error('Failed to connect to model: ' + error.message);
+        console.error('Error:', error);
+        throw error;
     }
 }
 
