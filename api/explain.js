@@ -8,33 +8,29 @@ export default async function handler(req, res) {
         const { code } = req.body;
 
         const hfResponse = await fetch(
-            "https://router.huggingface.co/hf-inference/models/Arafat002/codet5-python-explainer",
+            "https://arafat002-codet5-python-explainer.hf.space/run/explain_code",
             {
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${process.env.HF_TOKEN}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    inputs: code
+                    data: [code]
                 })
             }
         );
 
-        const text = await hfResponse.text();
+        const data = await hfResponse.json();
 
-        let data;
-        try {
-            data = JSON.parse(text);
-        } catch {
-            throw new Error(text);
-        }
-
-        return res.status(200).json(data);
+        return res.status(200).json({
+            generated_text: data.data[0]
+        });
 
     } catch (error) {
+
         return res.status(500).json({
             error: "Server error: " + error.message
         });
+
     }
 }
