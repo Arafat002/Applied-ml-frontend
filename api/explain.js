@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
         const { code } = req.body;
 
-        const hfResponse = await fetch(
+        const response = await fetch(
             "https://arafat002-codet5-python-explainer.hf.space/run/explain_code",
             {
                 method: "POST",
@@ -20,18 +20,28 @@ export default async function handler(req, res) {
             }
         );
 
-        const data = await hfResponse.json();
+        const data = await response.json();
 
-        console.log("HF response:", data);
+        console.log("HF SPACE RESPONSE:", data);
 
-        return res.status(200).json({
-            generated_text: data.data
+        // Gradio Spaces usually return:
+        // { data: ["explanation text"] }
+
+        if (data.data) {
+            return res.status(200).json({
+                generated_text: Array.isArray(data.data) ? data.data[0] : data.data
+            });
+        }
+
+        return res.status(500).json({
+            error: "Invalid response from Hugging Face Space",
+            raw: data
         });
 
     } catch (error) {
 
         return res.status(500).json({
-            error: "Server error: " + error.message
+            error: error.message
         });
 
     }
