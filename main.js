@@ -98,64 +98,19 @@ async function handleExplainCode() {
 // API Call to the Fine-Tuned Model
 
 async function callModelAPI(code) {
-    // Try multiple endpoints (Gradio versions use different formats)
-    const endpoints = [
-        'https://arafat002-codet5-python-explainer.hf.space/api/predict',
-        'https://arafat002-codet5-python-explainer.hf.space/run/predict',
-        'https://arafat002-codet5-python-explainer.hf.space/api/queue/join'
-    ];
+    try {
+        // Use Gradio's official client
+        const { client } = window.gradio;
 
-    for (const endpoint of endpoints) {
-        try {
-            console.log(`Trying endpoint: ${endpoint}`);
+        const app = await client("https://arafat002-codet5-python-explainer.hf.space");
+        const result = await app.predict("/predict", [code]);
 
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    data: [code]
-                })
-            });
+        return result.data[0];
 
-            // Log response for debugging
-            console.log('Response status:', response.status);
-            console.log('Response headers:', response.headers);
-
-            if (!response.ok) {
-                console.warn(`Endpoint ${endpoint} returned ${response.status}`);
-                continue; // Try next endpoint
-            }
-
-            // Check if it's JSON
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                const text = await response.text();
-                console.warn('Not JSON response:', text);
-                continue;
-            }
-
-            const result = await response.json();
-            console.log('API Result:', result);
-
-            // Handle different Gradio response formats
-            if (result.data && result.data.length > 0) {
-                return result.data[0]; // Gradio v3
-            } else if (result.output) {
-                return result.output; // Older Gradio
-            } else if (typeof result === 'string') {
-                return result; // Direct string response
-            }
-
-        } catch (error) {
-            console.error(`Error with endpoint ${endpoint}:`, error);
-            continue; // Try next endpoint
-        }
+    } catch (error) {
+        console.error('Gradio Client Error:', error);
+        throw new Error('Failed to connect to model: ' + error.message);
     }
-
-    // If all endpoints fail, show clear error
-    throw new Error('Could not connect to model. Please check:\n1. Space is running at https://arafat002-codet5-python-explainer.hf.space\n2. Space has woken up (visit it first)\n3. Browser console (F12) for detailed errors');
 }
 
 function displayExplanation(explanation, code) {
