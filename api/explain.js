@@ -16,17 +16,23 @@ export default async function handler(req, res) {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    inputs: "explain: " + code
+                    inputs: code
                 })
             }
         );
 
-        const data = await hfResponse.json();
+        const text = await hfResponse.text();
+
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch {
+            throw new Error(text);
+        }
 
         return res.status(200).json(data);
 
     } catch (error) {
-        console.error(error);
         return res.status(500).json({
             error: "Server error: " + error.message
         });
