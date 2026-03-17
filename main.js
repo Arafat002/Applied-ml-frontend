@@ -1,4 +1,5 @@
-﻿let editor;
+﻿import { Client } from "@gradio/client";
+let editor;
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeEditor();
@@ -97,26 +98,16 @@ async function handleExplainCode() {
 
 // API Call to the Fine-Tuned Model
 
-async function callModelAPI(code) {
-    const SPACE_URL = 'https://arafat002-codet5-python-explainer.hf.space/run/predict';
+import { Client } from "@gradio/client";
 
-    const response = await fetch(SPACE_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            data: [code]
-        })
+async function callModelAPI(code) {
+    const client = await Client.connect("Arafat002/codet5-python-explainer");
+
+    const result = await client.predict("/explain_code", {
+        code: code
     });
 
-    if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-    }
-
-    const result = await response.json();
-
-    return result.data[0];
+    return result.data;
 }
 
 function displayExplanation(explanation, code) {
