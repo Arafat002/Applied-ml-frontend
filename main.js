@@ -98,39 +98,25 @@ async function handleExplainCode() {
 // API Call to the Fine-Tuned Model
 
 async function callModelAPI(code) {
-    const SPACE_URL = 'https://arafat002-codet5-python-explainer.hf.space/api/predict';
+    const SPACE_URL = 'https://arafat002-codet5-python-explainer.hf.space/run/predict';
 
-    try {
-        const response = await fetch(SPACE_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                data: [code]
-            })
-        });
+    const response = await fetch(SPACE_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            data: [code]
+        })
+    });
 
-        if (response.status === 404 || response.status === 503) {
-            throw new Error('Model is sleeping. Please visit https://arafat002-codet5-python-explainer.hf.space first!');
-        }
-
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
-
-        const result = await response.json();
-
-        if (result.data && result.data.length > 0) {
-            return result.data[0];
-        } else {
-            throw new Error('No explanation received');
-        }
-
-    } catch (error) {
-        console.error('Error:', error);
-        throw error;
+    if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
     }
+
+    const result = await response.json();
+
+    return result.data[0];
 }
 
 function displayExplanation(explanation, code) {
