@@ -1,4 +1,4 @@
-﻿import { Client } from "@gradio/client";
+﻿
 let editor;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -98,10 +98,10 @@ async function handleExplainCode() {
 
 // API Call to the Fine-Tuned Model
 
-import { Client } from "@gradio/client";
-
 async function callModelAPI(code) {
-    const client = await Client.connect("Arafat002/codet5-python-explainer");
+    const client = await window.gradio_client.Client.connect(
+        "Arafat002/codet5-python-explainer"
+    );
 
     const result = await client.predict("/explain_code", {
         code: code
