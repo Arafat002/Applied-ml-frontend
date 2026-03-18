@@ -8,7 +8,11 @@
     <!-- CodeMirror for syntax highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js"></script>
+    <script type="module">
+        import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/+esm";
+
+        window.Client = Client;
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
 </head>
@@ -71,7 +75,8 @@
         <p>Generating explanation...</p>
     </div>
     <div class="toast" id="toast"></div>
-
+    
     <script src="main.js"></script>
+
 </body>
 </html>

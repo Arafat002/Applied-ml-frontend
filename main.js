@@ -99,7 +99,7 @@ async function handleExplainCode() {
 // API Call to the Fine-Tuned Model
 
 async function callModelAPI(code) {
-    const client = await window.gradio_client.Client.connect(
+    const client = await window.Client.connect(
         "Arafat002/codet5-python-explainer"
     );
 
